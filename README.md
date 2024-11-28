@@ -1,23 +1,31 @@
 # EMSES-CoToCoA-sample
 月面EMSESとCoToCoAを使うときのサンプルコード
 
+月面EMSESをCoToCoAのrequesterとして、workerにデータを送るサンプルコードです。
+
+このサンプルコードではEMSESのphi(ポテンシャル)の一部をphi_dataとしてworkerに送ります。
+
+workerではread_dataという名前でポテンシャルのデータを受け取ります。
+
+### 動かし方
+
 クローン
-```
+```bash
 git clone https://github.com/kmr-gks/EMSES-CoToCoA-sample.git
 ```
 
-
-```
+ディレクトリ移動
+```bash
 cd EMSES-CoToCoA-sample
 ```
 
 EMSESのクローン
-```
-git clone https://github.com/Nkzono99/MPIEMSES3D.git
+```bash
+git clone -b cotocoa https://github.com/kmr-gks/MPIEMSES3D.git
 ```
 
-
-```
+requesterに名前変更
+```bash
 mv MPIEMSES3D requester
 ```
 
@@ -25,6 +33,7 @@ mv MPIEMSES3D requester
 requesterの内のコードを一部変更する必要がある。
 
 `src/main/esses.F90`
+
 メインループ部分(`esses_mainstep`を呼び出す前か後にこのコードを追加する)
 
 ```fortran
@@ -112,9 +121,29 @@ end module m_ictcar
 ```
 
 
-moonフォルダで`make`する
+coupler, requester, workerそれぞれを`make`する
 
-default-condition,dshield1,exp_surfaceのうちの一つ
-シミュレーションフォルダに移動し、sbatchする
+```bash
+make -C coupler
+make -C requester
+make -C worker
+```
+
+`requester/bin/mpiemses3D`をそれぞれのシミュレーションフォルダにコピーする
+
+```bash
+cp requester/bin/mpiemses3D dshield1/
+cp requester/bin/mpiemses3D dshield1_ctca/
+cp requester/bin/mpiemses3D exp_hole/
+cp requester/bin/mpiemses3D exp_hole_ctca/
+```
+
+シミュレーションフォルダに移動し、`sbatch`する
+
+(例)
+```bash
+cd exp_hole_ctca
+sbatch job.sh
+```
 
 
