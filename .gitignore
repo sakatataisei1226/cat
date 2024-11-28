@@ -1,0 +1,27 @@
+#executable files
+coupler/coupler
+requester/
+worker/worker
+a.out
+mpiemses3D
+
+#simulation results
+*.h5
+*.out
+*.log
+chgacm*
+chgmov
+cpmxdiag*
+currnt
+energy
+energy?
+ewave
+icur
+i?flux
+nesc
+noflux
+ocur
+oltime
+pbody*
+seyield
+volt
