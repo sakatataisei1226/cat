@@ -1,4 +1,4 @@
-PREFIX=../../cotocoa
+PREFIX=../requester/lib/cotocoa/
 CFLAGS=-I${PREFIX}/include
 LDFLAGS=-L${PREFIX}/lib
 LIBS=-lctca
