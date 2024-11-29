@@ -37,7 +37,7 @@ program worker
 
     !read_dataにデータを読み込む
     call CTCAW_readarea_real8(phi_areaid,from_rank,0,read_data_size,read_data)
-    print*, "CTCAworker: read_data="
+    print*, "worker: read_data="
     do i = 1, read_data_size
       write(*, "(A,E)", advance="no") ",", read_data(i)
     end do
