@@ -110,15 +110,6 @@ make
 >  **注意**: EMSESには通常モード(CoToCoAを使わず単独で動かす場合)、requesterモード、workerモードがあります。今回はrequesterモードで動かすため、EMSESのフォルダ内で`make requester`が実行されます。
 
 
-`requester/bin/mpiemses3D`をそれぞれのシミュレーションフォルダにコピーします
-
-```bash
-cp requester/bin/mpiemses3D dshield1/
-cp requester/bin/mpiemses3D dshield1_ctca/
-cp requester/bin/mpiemses3D exp_hole/
-cp requester/bin/mpiemses3D exp_hole_ctca/
-```
-
 シミュレーションフォルダに移動しジョブを投入します
 
 (例)

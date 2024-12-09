@@ -3,7 +3,6 @@ coupler/coupler
 requester/
 worker/worker
 a.out
-mpiemses3D
 
 #simulation results
 *.h5
