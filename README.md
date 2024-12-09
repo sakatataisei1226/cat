@@ -96,6 +96,11 @@ contains
 end module m_ctcamain
 ```
 
+`requester/build.sh`の以下の行を削除します
+```bash
+module load intel/2022.3 intelmpi/2022.3
+```
+
 coupler, requester, workerを`make`します
 
 ```bash
