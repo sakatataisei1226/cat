@@ -18,7 +18,7 @@ module m_ctcamain
     !共有する受信データの配列
     real*8,allocatable    :: recv_data(:)
     !受信データのサイズ
-    integer(kind=8)       :: recv_data_size=10
+    integer(kind=8)       :: recv_data_size=35
 
     integer :: recv_areaid
 
@@ -66,13 +66,9 @@ subroutine cotocoa_mainstep
         finished = .false.
         do while (.not. finished)
             call CTCAR_wait(req_hdl)
-            if (req_hdl == 0) then
                 print *, "requester: received response from worker, recv_data=", recv_data
                 print *, "requester: response for request_id=", request_id
                 finished = .true.
-            else
-                call sleep(1)
-            end if
         end do
     end if
 
