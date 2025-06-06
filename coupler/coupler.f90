@@ -21,7 +21,7 @@ program coupler
 
   ! 必要に応じてサイズをセット
   phi_data_size = 35
-  recv_data_size = 10
+  recv_data_size = 35
   allocate(phi_data(phi_data_size))
   allocate(recv_data(recv_data_size))
 
