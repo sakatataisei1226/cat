@@ -1,36 +1,57 @@
 program worker
+  use mpi
   use ctca
   implicit none
 
+  integer :: ierr, myrank, nprocs
   integer :: phi_areaid, recv_areaid
-  integer(kind=8) :: phi_data_size, recv_data_size
-  real(8), allocatable :: phi_data(:)
+  integer :: i
+  integer :: from_rank, req_params(10)
+  integer :: read_data_size, send_data_size
+  integer :: request_id
+  real(8), allocatable :: read_data(:)
   real(8), allocatable :: send_data(:)
-  integer :: i, j, from_rank
 
   call CTCAW_init(0, 1)
+  call MPI_Comm_size(CTCA_subcomm, nprocs, ierr)
+  call MPI_Comm_rank(CTCA_subcomm, myrank, ierr)
+  print*, "worker: ", myrank, " / ", nprocs
 
-  phi_data_size = 10
-  allocate(phi_data(phi_data_size))
   call CTCAW_regarea_real8(phi_areaid)
-
-  recv_data_size = 10
-  allocate(send_data(recv_data_size))
   call CTCAW_regarea_real8(recv_areaid)
 
-  from_rank = 0 ! requesterのランク
+  do while(.true.)
+    call CTCAW_pollreq(from_rank, req_params, size(req_params))
+    if (CTCAW_isfin()) exit
 
-  do i = 1, 10
-      ! requesterからphiデータを受信
-      call CTCAW_readarea_real8(phi_areaid, from_rank, 0, phi_data_size, phi_data)
-      print *, "worker: received phi_data =", phi_data
+    ! リクエストIDを取得
+    request_id = req_params(3)
+    print *, "worker: received request_id=", request_id
 
-      ! サンプルデータを作成して送り返す
-      send_data = 1000.0d0 * i + [(j, j=1,recv_data_size)]
-      call CTCAW_writearea_real8(recv_areaid, from_rank, 0, recv_data_size, send_data)
-      print *, "worker: sent data to requester =", send_data
+    read_data_size = req_params(2)
+    if (.not. allocated(read_data)) then
+      allocate(read_data(read_data_size))
+    end if
+
+    call CTCAW_readarea_real8(phi_areaid, from_rank, 0, read_data_size, read_data)
+    print*, "worker: read_data=", read_data
+
+    send_data_size = read_data_size
+    if (.not. allocated(send_data)) then
+      allocate(send_data(send_data_size))
+    end if
+    do i = 1, send_data_size
+      send_data(i) = 1000.0d0 + i + myrank
+    end do
+
+    ! 応答データを返す
+    call CTCAW_writearea_real8(recv_areaid, from_rank, 0, send_data_size, send_data)
+    print*, "worker: sent response to requester, send_data=", send_data, "for request_id=", request_id
+
+    call CTCAW_complete()
   end do
 
+  print*, "worker is finalizing..."
   call CTCAW_finalize()
   stop
 end program worker
