@@ -1,0 +1,19 @@
+[mpiemses3D]
+version = "0.7.0"
+proj-dir = "."
+[futils]
+version = "0.2.2"
+proj-dir = "build/dependencies/futils"
+git = "https://github.com/Nkzono99/futils"
+rev = "c0198325afa389ec82bdbd2451e95dd1a0a788a8"
+[finbound]
+version = "0.6.0"
+proj-dir = "build/dependencies/finbound"
+git = "https://github.com/Nkzono99/finbound"
+rev = "f8b4897df4c032cfdd715fb4d59ddb7d022c1cc1"
+[mpifft-solver]
+version = "0.1.4"
+proj-dir = "build/dependencies/mpifft-solver"
+git = "https://github.com/Nkzono99/mpifft-solver.git"
+rev = "6fb9cdd5f9b95e4154f973433bbb6f47b6a1ef74"
+
