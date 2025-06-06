@@ -1,59 +1,86 @@
 module m_ctcamain
-    use ctca
     use oh_type
+    use ctca
     use paramt
     use allcom
 #define OH_LIB_LEVEL 3
 #include "ohhelp_f.h"
     implicit none
+    private
     public cotocoa_init, cotocoa_mainstep, cotocoa_finalize
 
-    ! phiデータ
-    real(8), allocatable :: phi_data(:)
-    integer(kind=8) :: phi_data_size
-    integer :: phi_areaid
-    
+    !共有するphiの配列
+    real*8,allocatable    :: phi_data(:)
+    !共有する配列のサイズ
+    integer(kind=8)       :: phi_data_size=35
+    !共有領域のエリアID
+    integer               :: phi_areaid
+    !共有する受信データの配列
+    real*8,allocatable    :: recv_data(:)
+    !受信データのサイズ
+    integer(kind=8)       :: recv_data_size=10
 
-    ! workerから受信するデータ
-    real(8), allocatable :: recv_data(:)
-    integer(kind=8) :: recv_data_size
     integer :: recv_areaid
 
 contains
 
     subroutine cotocoa_init
-
-        print *, "ctcainit check 1"
-        phi_data_size = 10
+        !共有する配列の領域を確保
         allocate(phi_data(phi_data_size))
-        print *, "ctcainit check 2"
-        call CTCAR_regarea_real8(phi_data, phi_data_size, phi_areaid)
-        print *, "ctcainit check 3"
-        recv_data_size = 10
         allocate(recv_data(recv_data_size))
-        print *, "ctcainit check 4"
-        call CTCAR_regarea_real8(recv_data, recv_data_size, recv_areaid)
-        print *, "ctcainit check 5"
+        !エリアIDを取得
+        call CTCAR_regarea_real8(phi_data,phi_data_size,phi_areaid)
+        call CTCAR_regarea_real8(recv_data,recv_data_size,recv_areaid)
     end subroutine cotocoa_init
 
-    subroutine cotocoa_mainstep
-        implicit none
-        integer :: i, j, from_rank
-        from_rank = 0 ! workerのランク
+subroutine cotocoa_mainstep
+    implicit none
 
-        do i = 1, 10
-            ! phiデータを更新してworkerに送る
-            phi_data = 10.0d0 * i + [(j, j=1,phi_data_size)]
-            call CTCAR_writearea_real8(phi_areaid, from_rank, 0, phi_data_size, phi_data)
-            print *, "requester: sent phi_data =", phi_data
+    integer(kind=4) :: req_params(10)
+    integer(kind=4) :: x, y, z, phi_shape(5), i
+    integer :: from_rank = 10
+    integer(kind=8) :: req_hdl
+    integer, save :: request_id = 0  ! リクエストIDカウンタ
 
-            ! workerからデータを受信
-            call CTCAR_readarea_real8(recv_areaid, from_rank, 0, recv_data_size, recv_data)
-            print *, "requester: received data from worker =", recv_data
+    integer :: resp_hdl
+    integer :: stat
+    logical :: finished
+
+    if (myid .eq. from_rank) then
+        request_id = request_id + 1  ! リクエストごとにインクリメント
+
+        phi_shape = shape(phi)
+        x = phi_shape(2)
+        y = phi_shape(3)
+        z = phi_shape(4)
+        phi_data = phi(1, 1:phi_data_size, y/2, z/2, 1)
+        print *, "requester: phi_data=", phi_data
+
+        req_params(1) = from_rank
+        req_params(2) = phi_data_size
+        req_params(3) = request_id   ! リクエストIDを埋め込む
+
+        call CTCAR_sendreq_hdl(req_params, size(req_params), req_hdl)
+        print *, "requester: sent request, req_hdl=", req_hdl, "request_id=", request_id
+
+        finished = .false.
+        do while (.not. finished)
+            call CTCAR_wait(req_hdl)
+            if (req_hdl == 0) then
+                print *, "requester: received response from worker, recv_data=", recv_data
+                print *, "requester: response for request_id=", request_id
+                finished = .true.
+            else
+                call sleep(1)
+            end if
         end do
-    end subroutine cotocoa_mainstep
+    end if
+
+end subroutine cotocoa_mainstep
+
 
     subroutine cotocoa_finalize
+  
     end subroutine cotocoa_finalize
 
 end module m_ctcamain
