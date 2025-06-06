@@ -1,0 +1,18 @@
+././src/wrapper/particle_collision.F90(392): warning #5462: Global name too long, shortened from: particle_collisioncreate_simple_collision_boundaries_mp_ADD_RECTANGLE_HOLE_SURFACE to: ticle_collisioncreate_simple_collision_boundaries_mp_ADD_RECTANGLE_HOLE_SURFACE
+        subroutine add_rectangle_hole_surface
+-------------------^
+././src/wrapper/particle_collision.F90(521): warning #5462: Global name too long, shortened from: particle_collisioncreate_simple_collision_boundaries_mp_ADD_DENT_RECTANGLE_HOLE_SURFACE to: _collisioncreate_simple_collision_boundaries_mp_ADD_DENT_RECTANGLE_HOLE_SURFACE
+        subroutine add_dent_rectangle_hole_surface
+-------------------^
+././src/wrapper/particle_collision.F90(711): warning #5462: Global name too long, shortened from: particle_collisioncreate_simple_collision_boundaries_mp_ADD_CYLINDER_HOLE_SURFACE to: rticle_collisioncreate_simple_collision_boundaries_mp_ADD_CYLINDER_HOLE_SURFACE
+        subroutine add_cylinder_hole_surface
+-------------------^
+././src/wrapper/particle_collision.F90(759): warning #5462: Global name too long, shortened from: particle_collisioncreate_simple_collision_boundaries_mp_ADD_HYPERBOLOID_HOLE_SURFACE to: cle_collisioncreate_simple_collision_boundaries_mp_ADD_HYPERBOLOID_HOLE_SURFACE
+        subroutine add_hyperboloid_hole_surface
+-------------------^
+././src/wrapper/particle_collision.F90(807): warning #5462: Global name too long, shortened from: particle_collisioncreate_simple_collision_boundaries_mp_ADD_ELLIPSOID_HOLE_SURFACE to: ticle_collisioncreate_simple_collision_boundaries_mp_ADD_ELLIPSOID_HOLE_SURFACE
+        subroutine add_ellipsoid_hole_surface
+-------------------^
+././src/wrapper/particle_collision.F90(928): warning #5462: Global name too long, shortened from: particle_collisioncreate_simple_collision_boundaries_mp_ADD_PLANE_WITH_CIRCLE_HOLE to: ticle_collisioncreate_simple_collision_boundaries_mp_ADD_PLANE_WITH_CIRCLE_HOLE
+        subroutine add_plane_with_circle_hole
+-------------------^
